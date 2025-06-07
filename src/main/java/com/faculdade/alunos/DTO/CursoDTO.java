@@ -18,4 +18,11 @@ public class CursoDTO {
         this.id = curso.getId();
         this.nome = curso.getNome();
     }
+
+    public Curso toEntity(){
+        Curso curso = new Curso();
+        curso.setId(this.id);
+        curso.setNome(this.nome);
+        return curso;
+    }
 }

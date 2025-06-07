@@ -24,9 +24,10 @@ public class AlunoController {
     public ResponseEntity<AlunoDTO> newAluno(@RequestBody AlunoDTO alunoDTO){
         Aluno aluno = alunoDTO.toEntity();
         Aluno alunoInserido = alunoService.criar(aluno);
+
         URI location = URI.create("/alunos/" + alunoInserido.getId());
 
-        return ResponseEntity.created(location).body(new AlunoDTO(alunoInserido));
+        return ResponseEntity.created(location).body(AlunoDTO.fromEntity(alunoInserido));
     }
 
     @PostMapping("/inserir/{alunoId}/cursos/{cursoId}")
@@ -34,14 +35,14 @@ public class AlunoController {
         alunoService.adicionarCursoAoAluno(alunoId, cursoId);
         Aluno alunoAtualizado = alunoService.listarPorId(alunoId);
 
-        return ResponseEntity.ok(new AlunoDTO(alunoAtualizado));
+        return ResponseEntity.ok(AlunoDTO.fromEntity(alunoAtualizado));
     }
 
     @GetMapping("/listar/{id}")
     public ResponseEntity<AlunoDTO> listPorId(@PathVariable Long id){
         Aluno aluno = alunoService.listarPorId(id);
 
-        return ResponseEntity.ok(new AlunoDTO(aluno));
+        return ResponseEntity.ok(AlunoDTO.fromEntity(aluno));
     }
 
     @GetMapping("/listar/alunos")
@@ -53,8 +54,8 @@ public class AlunoController {
 
     @PutMapping("/editar/{id}")
     public ResponseEntity<AlunoDTO> editAluno(@PathVariable Long id, @RequestBody AlunoDTO alunoDTO){
-        Aluno alunoEditado = alunoService.editar(id, new Aluno(alunoDTO));
-        return ResponseEntity.ok(new AlunoDTO(alunoEditado));
+        Aluno alunoEditado = alunoService.editar(id, alunoDTO.toEntity());
+        return ResponseEntity.ok(AlunoDTO.fromEntity(alunoEditado));
     }
 
     @DeleteMapping("/{id}")

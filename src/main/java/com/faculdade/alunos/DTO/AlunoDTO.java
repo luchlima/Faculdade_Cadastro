@@ -18,14 +18,32 @@ public class AlunoDTO {
     private String nome;
     private Set<CursoDTO> cursos;
 
-    public static AlunoDTO fromEntity(Aluno aluno) {
-        AlunoDTO dto = new AlunoDTO();
-        dto.setId(aluno.getId());
-        dto.setNome(aluno.getNome());
+    public AlunoDTO(Aluno aluno) {
+        this.id = aluno.getId();
+        this.nome = aluno.getNome();
 
-        if (aluno.getCursos() != null){
-            dto.setCursos(aluno.getCursos().stream().map(CursoDTO::new).collect(Collectors.toSet()));
+        if (aluno.getCursos() != null) {
+            this.cursos = aluno.getCursos()
+                    .stream()
+                    .map(CursoDTO::new)
+                    .collect(Collectors.toSet());
         }
-        return dto;
+    }
+
+    public static AlunoDTO fromEntity(Aluno aluno) {
+        return new AlunoDTO(aluno);
+    }
+
+
+    public Aluno toEntity(){
+        Aluno aluno = new Aluno();
+        aluno.setId(this.id);
+        aluno.setNome(this.nome);
+        if (this.cursos != null){
+            aluno.setCursos(this.cursos.stream()
+                    .map(CursoDTO::toEntity)
+                    .collect(Collectors.toSet()));
+        }
+        return aluno;
     }
 }
